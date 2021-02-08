@@ -1,6 +1,4 @@
 # employee-tracker
-  
-  # Employee-Tracker
  
   ## Description
   This project focuses on the use of connectiong Node to an SQL. With the use of this project, an individual can add, update, view, and delete employees from the company records with easy.
