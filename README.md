@@ -27,7 +27,7 @@
 
   ## Code Sample
   As it shows in the sample code, with connection.query you can call the SQL for information stored there.
-  <img src="./assets/sampleCode.png" alt="Employee-Tracker"/>
+  <img src="./assets/samplecode.png" alt="Employee-Tracker"/>
 
   ## Screenshots
   <img src="./assets/screenshot.gif" alt="Employee-Tracker"/>
