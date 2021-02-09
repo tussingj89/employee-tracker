@@ -19,7 +19,7 @@ var connection = mysql.createConnection({
     user: "root",
   
     // Your password
-    password: "Wesley_1989",
+    password: "password_location",
     database: "company_db"
   });
   // connect to the mysql server and sql database
@@ -27,9 +27,9 @@ var connection = mysql.createConnection({
     if (err) throw err;
     console.log("Connected as Id" + connection.threadId)
     startApp();
-    setList(); 
     runSearch();
 });
+//sets arrays using connection query
 function setList() {
 connection.query("SELECT * FROM role", function(err, res) {
     if (err) throw err
@@ -94,37 +94,38 @@ function startApp() {
     };
 // start of the inquirer prompts
 function runSearch() {
+    setList(); 
     inquirer.prompt({
         type: "list",
         message: "What would you like to do?",
         choices: [
-         "add to company",
-         "view company", 
-         "update records",
-         "delete from the company",
-         "exit"],
+         "Add to company",
+         "View company", 
+         "Update records",
+         "Delete from the company",
+         "Exit"],
          name: "action"
     }).then(function (input) {
 		console.log('User selected ' + input.action);
 
 		
-        if (input.action === 'add to company') {
+        if (input.action === 'Add to company') {
             
             addToCompany();
 
-		} else if (input.action === 'view company') {
+		} else if (input.action === 'View company') {
 			
 			viewCompany();
 
-		} else if (input.action === 'update records') {
+		} else if (input.action === 'Update records') {
 			
 			updateCompany();
 
-        } else if (input.action === "delete from the company") {
+        } else if (input.action === "Delete from the company") {
             
             deleteFromCompany();
 
-		}  else if(input.action === 'exit') {
+		}  else if(input.action === 'Exit') {
            
             connection.end();
         }
@@ -134,24 +135,24 @@ function runSearch() {
 function addToCompany() {
   inquirer.prompt([{
       type: "list",
-      message: "what would you like to add",
+      message: "What would you like to add?",
       choices: [
-          "department",
-          "role",
-          "employee"
+          "Department",
+          "Role",
+          "Employee"
       ],
       name: "add_type"
   }]).then(function (input) {
     console.log('User selected ' + input.add_type);
 
     
-    if (input.add_type === 'department') {
+    if (input.add_type === 'Department') {
         adddepartment();
 
-    } else if (input.add_type === 'role') {
+    } else if (input.add_type === 'Role') {
         addroles();
 
-    } else if (input.add_type === 'employee') {
+    } else if (input.add_type === 'Employee') {
         addEmployee();
     }
 })
@@ -161,11 +162,11 @@ function addToCompany() {
 function addEmployee() {
     inquirer.prompt([{
         type: "input",
-        message: "enter employee's first name",
+        message: "Enter employee's first name",
         name: "first_name"
     },
     {   type: "input",
-        message: "enter employee's last name",
+        message: "Enter employee's last name",
         name: "last_name"
     },
     {
@@ -176,7 +177,7 @@ function addEmployee() {
     },
     {
         type: "list",
-        message: "who is the manager",
+        message: "Who is the manager",
         choices: managerArr,
         name: "manager"
         
@@ -200,7 +201,6 @@ function addEmployee() {
         connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.first_name, answer.last_name, roleID1, manager] , function(err, res) {
         if (err) throw err;
         console.table("employee added");
-        setList();
         runSearch();
     }) 
 })
@@ -209,14 +209,13 @@ function addEmployee() {
 function adddepartment() {
     inquirer.prompt([{
         type: "input",
-        message: "what department would you like to add",
+        message: "What department would you like to add?",
         name: "department"
 
     }]).then(function(answer){
             connection.query("INSERT INTO department (name) VALUES (?)", [answer.department] , function(err, res) {
             if (err) throw err;
             console.table(res + "department added")
-            setList();
             runSearch();
     })
     })
@@ -225,17 +224,17 @@ function adddepartment() {
 function addroles() {
     inquirer.prompt([{
         type: "input",
-        message: "what role would you like to add",
+        message: "What role would you like to add?",
         name: "role"
     },
     {
         type: "input",
-        message: "What is the salary of this role",
+        message: "What is the salary of this role?",
         name: "salary"
     },
     {
         type: "list",
-        message: "what is the department id number?",
+        message: "What is the department for this role?",
         choices: deptArr,
         name: "department"
 
@@ -249,7 +248,6 @@ function addroles() {
         connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answer.role, answer.salary, department], function(err, res) {
             if (err) throw err;
             console.log(res + "role added")
-            setList();
             runSearch();
         })
     })
@@ -258,26 +256,26 @@ function addroles() {
 function viewCompany() {
     inquirer.prompt([{
         type: "list",
-        message: "how would you like to view the company?",
-        choices: ["by department", "by the roles", "by employees", " view employees by managers"],
+        message: "Wow would you like to view the company?",
+        choices: ["By Department", "By the Roles", "By Employees", " View Employees by Managers"],
         name: "view_type"
     }]).then(function (input) {
         console.log('User selected ' + input.view_type);
     
         
-        if (input.view_type === 'by department') {
+        if (input.view_type === 'By Department') {
             byDepartment();
     
-        } else if (input.view_type === 'by the roles') {
+        } else if (input.view_type === 'By the Roles') {
             byRoles();
     
-        } else if (input.view_type === 'by employees') {
+        } else if (input.view_type === 'By Employees') {
             byEmployee();
 
         // } else if (input.view_type === 'view department budgets') {
         //     viewBudget();
         
-        } else if (input.view_type === ' view employees by managers') {
+        } else if (input.view_type === ' View Employees by Managers') {
             byManager();
         }
     })
@@ -306,6 +304,7 @@ function byEmployee(){
         runSearch();
       })
 }
+// query results by managers
 function byManager() {
     connection.query("SELECT * FROM employee ORDER BY manager_id", function(err, res) {
         if (err) throw err;
@@ -327,20 +326,20 @@ function byManager() {
 function updateCompany() {
     inquirer.prompt([{
         type: "list",
-        message: "what would you like to update?",
+        message: "What would you like to update?",
         choices: [
-            "employee",
-            "managers"
+            "Employee",
+            "Managers"
         ],
         name: "updateChoice"
     }]).then(function (input) {
         console.log('User selected ' + input.updateChoice);
     
         
-        if (input.updateChoice === 'employee') {
+        if (input.updateChoice === 'Employee') {
            updateEmployee();
     
-        } else if (input.updateChoice === 'managers') {
+        } else if (input.updateChoice === 'Managers') {
             updateManagers();
         }
     })
@@ -350,13 +349,13 @@ function updateEmployee() {
     // console.log(employeeArr)
     inquirer.prompt([{
         type: "list",
-        message: "which employee would you like to update",
+        message: "Which employee would you like to update?",
         choices: employeeArr,
         name: "employName"
     },
     {
         type: "list",
-        message: "what is there new role id?",
+        message: "What is there new role id?",
         choices: roleArr,
         name: "role"
 
@@ -425,24 +424,24 @@ function updateManagers() {
 function deleteFromCompany() {
     inquirer.prompt([{
         type: "list",
-        message: "what information would you like to delete",
+        message: "What information would you like to delete",
         choices: [
-            "role",
-            "employee",
-            "department"
+            "Role",
+            "Employee",
+            "Department"
         ],
         name: "deleteChoice"
     }]).then(function (input) {
         console.log('User selected ' + input.deleteChoice);
     
         
-        if (input.deleteChoice === 'employee') {
+        if (input.deleteChoice === 'Employee') {
            deleteEmployee();
     
-        } else if (input.deleteChoice === 'role') {
+        } else if (input.deleteChoice === 'Role') {
             deleteRole();
 
-        } else if (input.deleteChoice === 'department') {
+        } else if (input.deleteChoice === 'Department') {
             deleteDepartment();
         }
     })
@@ -452,7 +451,7 @@ function  deleteEmployee() {
     inquirer.prompt([{
 
         type: "list",
-        message: "which employee would you like to update",
+        message: "Which employee would you like to update?",
         choices: employeeArr,
         name: "fired"
     
@@ -471,7 +470,7 @@ function deleteRole() {
     inquirer.prompt([{
 
             type: "list",
-            message: "what role would you like to delete",
+            message: "What role would you like to delete",
             choices: roleArr,
             name: "role1"
     
@@ -496,7 +495,7 @@ function deleteDepartment() {
     inquirer.prompt([{
 
         type: "list",
-        message: "what is there department id?",
+        message: "What is the department?",
         choices: deptArr,
         name: "department"
 
